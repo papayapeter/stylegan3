@@ -152,4 +152,6 @@ cython_debug/
 #.idea/
 
 # private directories
-out/*
+in
+out
+models

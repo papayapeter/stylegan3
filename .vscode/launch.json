@@ -1,0 +1,67 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "stylegan3r - generate images",
+            "type": "python",
+            "request": "launch",
+            "program": "gen_images.py",
+            "args": [
+                "--outdir=out",
+                "--trunc=1",
+                "--seeds=0",
+                "--network=models/stylegan3-r-ffhq-1024x1024.pkl"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "stylegan2 - generate images",
+            "type": "python",
+            "request": "launch",
+            "program": "gen_images.py",
+            "args": [
+                "--outdir=out",
+                "--trunc=1",
+                "--seeds=0",
+                "--network=models/stylegan2-ffhq.pkl"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "align",
+            "type": "python",
+            "request": "launch",
+            "program": "alignment.py",
+            "args": [
+                "--predictor=models/shape_predictor_68_face_landmarks.dat",
+                "--source=in/unaligned/",
+                "--dest=in/",
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "stylegan2 - project",
+            "type": "python",
+            "request": "launch",
+            "program": "projector.py",
+            "args": [
+                "--outdir=out/",
+                "--target=in/",
+                "--save-video",
+                "--network=models/stylegan2-ffhq.pkl"
+            ],
+            "console": "integratedTerminal"
+        },
+    ]
+}
