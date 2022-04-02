@@ -8,6 +8,13 @@
 - feature extraction model: https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/vgg16.pt
 - landmark detection model: http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2 (needs to be extracted)
 
+
+### to do
+
+- [ ] adapt stylegan2 generation to stylegan3 so I can create an image from projected v
+- [ ] build own interpolation methods (circular/linear)
+- [ ] build animation interpolation framework to create smooth interpolations between latent vectors arranged like keyframes on a timeline
+
 ## Alias-Free Generative Adversarial Networks (StyleGAN3)<br><sub>Official PyTorch implementation of the NeurIPS 2021 paper</sub>
 
 ![Teaser image](./docs/stylegan3-teaser-1920x1006.png)
