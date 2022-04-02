@@ -10,6 +10,7 @@
 
 import copy
 import os
+from tqdm import tqdm
 from time import perf_counter
 
 import click
@@ -26,6 +27,7 @@ def project(
     G,
     target: torch.Tensor, # [C,H,W] and dynamic range [0,255], W & H must match G output resolution
     *,
+    feature_extractor_pkl,
     num_steps                  = 1000,
     w_avg_samples              = 10000,
     initial_learning_rate      = 0.1,
@@ -57,8 +59,8 @@ def project(
     noise_bufs = { name: buf for (name, buf) in G.synthesis.named_buffers() if 'noise_const' in name }
 
     # Load VGG16 feature detector.
-    url = 'https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/vgg16.pt'
-    with dnnlib.util.open_url(url) as f:
+    print(f'Loading feature detection model from "{feature_extractor_pkl}"...')
+    with dnnlib.util.open_url(feature_extractor_pkl) as f:
         vgg16 = torch.jit.load(f).eval().to(device)
 
     # Features for target image.
@@ -134,14 +136,16 @@ def project(
 
 @click.command()
 @click.option('--network', 'network_pkl', help='Network pickle filename', required=True)
+@click.option('--feature-ext', 'feature_extractor_pkl', help='Feature extractor model pickle filename', required=True)
 @click.option('--target', 'target_fname', help='Target image file to project to', required=True, metavar='FILE')
 @click.option('--num-steps',              help='Number of optimization steps', type=int, default=1000, show_default=True)
 @click.option('--seed',                   help='Random seed', type=int, default=303, show_default=True)
 @click.option('--save-video',             help='Save an mp4 video of optimization progress', type=bool, default=True, show_default=True)
 @click.option('--outdir',                 help='Where to save the output images', required=True, metavar='DIR')
-@click.option('--fps',                    help='Frames per second of final video', default=10, show_default=True)
+@click.option('--fps',                    help='Frames per second of final video', default=30, show_default=True)
 def run_projection(
     network_pkl: str,
+    feature_extractor_pkl: str,
     target_fname: str,
     outdir: str,
     save_video: bool,
@@ -161,7 +165,7 @@ def run_projection(
     torch.manual_seed(seed)
 
     # Load networks.
-    print('Loading networks from "%s"...' % network_pkl)
+    print(f'Loading networks from "{network_pkl}"...')
     device = torch.device('cuda')
     with dnnlib.util.open_url(network_pkl) as fp:
         G = legacy.load_network_pkl(fp)['G_ema'].requires_grad_(False).to(device) # type: ignore
@@ -179,6 +183,7 @@ def run_projection(
     projected_w_steps = project(
         G,
         target=torch.tensor(target_uint8.transpose([2, 0, 1]), device=device), # pylint: disable=not-callable
+        feature_extractor_pkl=feature_extractor_pkl,
         num_steps=num_steps,
         device=device,
         verbose=True
@@ -188,13 +193,14 @@ def run_projection(
     # Render debug output: optional video and projected image and W vector.
     os.makedirs(outdir, exist_ok=True)
     if save_video:
-        video = imageio.get_writer(f'{outdir}/proj.mp4', mode='I', fps=fps, codec='libx264', bitrate='16M')
-        print (f'Saving optimization progress video "{outdir}/proj.mp4"')
-        for projected_w in projected_w_steps:
+        video_path = os.path.join(outdir, 'proj.mp4')
+        video = imageio.get_writer(video_path, mode='I', fps=fps, codec='libx264', bitrate='16M')
+        print (f'Saving optimization progress video "{video_path}"')
+        for projected_w in tqdm(projected_w_steps, total=len(projected_w_steps)):
             synth_image = G.synthesis(projected_w.unsqueeze(0), noise_mode='const')
             synth_image = (synth_image + 1) * (255/2)
             synth_image = synth_image.permute(0, 2, 3, 1).clamp(0, 255).to(torch.uint8)[0].cpu().numpy()
-            video.append_data(np.concatenate([target_uint8, synth_image], axis=1))
+            video.append_data(synth_image)
         video.close()
 
     # Save final projected frame and W vector.

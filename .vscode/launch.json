@@ -34,7 +34,7 @@
                 "--outdir=out",
                 "--trunc=1",
                 "--seeds=0",
-                "--network=models/stylegan2-ffhq.pkl"
+                "--network=models/stylegan2-ffhq-1024x1024.pkl"
             ],
             "console": "integratedTerminal"
         },
@@ -62,16 +62,34 @@
             "console": "integratedTerminal"
         },
         {
+            "name": "stylegan3 - project",
+            "type": "python",
+            "request": "launch",
+            "program": "projector.py",
+            "args": [
+                "--target=in/dataset/00000/img00000002.png",
+                "--outdir=out/",
+                "--num-steps=1000",
+                "--save-video=True",
+                "--fps=30",
+                "--network=models/stylegan3-r-ffhq-1024x1024.pkl",
+                "--feature-ext=models/vgg16.pt"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
             "name": "stylegan2 - project",
             "type": "python",
             "request": "launch",
             "program": "projector.py",
             "args": [
-                "--target=in/dataset/00000/img00000000.png",
+                "--target=in/dataset/00000/img00000002.png",
                 "--outdir=out/",
+                "--num-steps=1000",
                 "--save-video=True",
                 "--fps=30",
-                "--network=models/stylegan2-ffhq.pkl"
+                "--network=models/stylegan2-ffhq-1024x1024.pkl",
+                "--feature-ext=models/vgg16.pt"
             ],
             "console": "integratedTerminal"
         },

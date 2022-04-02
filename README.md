@@ -1,3 +1,13 @@
+## changes
+- added projector from [stylegan2](https://github.com/NVlabs/stylegan2-ada-pytorch) with adjustments
+- added face alignment tool from [Amir Saini's Repo](https://github.com/AmarSaini/Epoching_StyleGan2_Setup) with adjustments
+
+### resources:
+- stylegan2 pretrained models: https://catalog.ngc.nvidia.com/orgs/nvidia/teams/research/models/stylegan2/files
+- stylegan3 pretrained models: https://catalog.ngc.nvidia.com/orgs/nvidia/teams/research/models/stylegan3/files
+- feature extraction model: https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/vgg16.pt
+- landmark detection model: http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2 (needs to be extracted)
+
 ## Alias-Free Generative Adversarial Networks (StyleGAN3)<br><sub>Official PyTorch implementation of the NeurIPS 2021 paper</sub>
 
 ![Teaser image](./docs/stylegan3-teaser-1920x1006.png)
