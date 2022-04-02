@@ -51,14 +51,26 @@
             "console": "integratedTerminal"
         },
         {
+            "name": "create projection dataset",
+            "type": "python",
+            "request": "launch",
+            "program": "dataset_tool.py",
+            "args": [
+                "--source=in/aligned/",
+                "--dest=in/dataset/",
+            ],
+            "console": "integratedTerminal"
+        },
+        {
             "name": "stylegan2 - project",
             "type": "python",
             "request": "launch",
             "program": "projector.py",
             "args": [
+                "--target=in/dataset/00000/img00000000.png",
                 "--outdir=out/",
-                "--target=in/",
-                "--save-video",
+                "--save-video=True",
+                "--fps=30",
                 "--network=models/stylegan2-ffhq.pkl"
             ],
             "console": "integratedTerminal"
