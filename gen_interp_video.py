@@ -3,11 +3,10 @@
 #
 # to do:
 # - implement interpolation between seeds (with truncation) and seed parsing through click (can be taken from gen_images.py)
-# - implement parsing of projected_w files so 1-n files can be passed in
 """interpolate between two vectors in latent space and save the result as video"""
 
 import os
-from typing import Optional, Tuple
+from typing import Union, List, Tuple, Optional
 
 import click
 from tqdm import tqdm
@@ -18,6 +17,8 @@ import torch
 import math
 
 import legacy
+
+from gen_images import parse_range, parse_paths
 
 #----------------------------------------------------------------------------
 
@@ -100,17 +101,21 @@ def line_interpolate(endpoints, steps, easing):
 
 # yapf: disable
 @click.command()
-@click.option('--network', 'network_pkl', help='Network pickle filename', required=True)
-@click.option('--ws', 'projected_ws',     type=str, nargs=2, help='2 projected_w filenames to interpolate beween', required=True)
-@click.option('--noise-mode',             help='Noise mode', type=click.Choice(['const', 'random', 'none']), default='const', show_default=True)
-@click.option('--outdir',                 help='Where to save the output video', type=str, required=True, metavar='DIR')
-@click.option('--name',                   help='Name of the output Video', type=str, required=True)
-@click.option('--length',                 help='Length of the final video in seconds', type=float, default=10, show_default=True)
-@click.option('--fps',                    help='Frames per second of final video', type=int, default=30, show_default=True)
+@click.option('--network', 'network_pkl',  help='Network pickle filename', required=True)
+@click.option('--ws', 'projected_ws',      type=parse_paths, help='One or more projected_w filenames to interpolate between')
+@click.option('--seeds',                   type=parse_range, help='List of random seeds (e.g., \'0,1,4-6\') to interpüolate between')
+@click.option('--trunc', 'truncation_psi', type=float, help='Truncation psi', default=1, show_default=True)
+@click.option('--noise-mode',              help='Noise mode', type=click.Choice(['const', 'random', 'none']), default='const', show_default=True)
+@click.option('--outdir',                  help='Where to save the output video', type=str, required=True, metavar='DIR')
+@click.option('--name',                    help='Name of the output Video', type=str, required=True)
+@click.option('--length',                  help='Length of the final video in seconds', type=float, default=10, show_default=True)
+@click.option('--fps',                     help='Frames per second of final video', type=int, default=30, show_default=True)
 # yapf: enable
 def generate_interpolation(
     network_pkl: str,
-    projected_ws: Tuple[str],
+    projected_ws: Optional[List[str]],
+    seeds: Optional[List[int]],
+    truncation_psi: float,
     noise_mode: str,
     outdir: str,
     name: str,
@@ -125,12 +130,27 @@ def generate_interpolation(
 
     os.makedirs(outdir, exist_ok=True)
 
-    # load w from npz and combine
-    ws = torch.tensor((), device=device)
-    for f in projected_ws:
-        w = torch.tensor(np.load(f)['w'], device=device)
-        assert w.shape[1:] == (G.num_ws, G.w_dim)
-        ws = torch.cat((ws, w), 0)
+    # generate from files
+    if projected_ws is not None:
+        # load ws from npz and combine
+        ws = torch.tensor((), device=device)
+        for f in projected_ws:
+            w = torch.tensor(np.load(f)['w'], device=device)
+            assert w.shape[1:] == (G.num_ws, G.w_dim)
+            ws = torch.cat((ws, w), 0)
+
+    # generate from seeds
+    elif seeds is not None:
+        ws = torch.tensor((), device=device)
+        for seed in seeds:
+            z = torch.from_numpy(
+                np.random.RandomState(seed).randn(1, G.z_dim)
+                ).to(device)
+
+            w = G.mapping(z, None, truncation_psi=truncation_psi)
+            ws = torch.cat((ws, w), 0)
+    else:
+        raise click.ClickException('Either "--ws" or "--seeds" must be set!')
 
     # get interpolated points
     points = line_interpolate(ws, fps * length, 'easeInOutQuad')
@@ -144,23 +164,11 @@ def generate_interpolation(
         bitrate='16M'
         )
     for w in tqdm(points, total=len(points)):
-        synth_image = G.synthesis(w.unsqueeze(0), noise_mode=noise_mode)
-        synth_image = (synth_image + 1) * (255 / 2)
-        synth_image = synth_image.permute(0, 2, 3,
-                                          1).clamp(0,
-                                                   255).to(torch.uint8
-                                                           )[0].cpu().numpy()
-        video.append_data(synth_image)
-    # backwards
-    # for w in tqdm(reversed(points), total=len(points)):
-    #     synth_image = G.synthesis(w.unsqueeze(0), noise_mode=noise_mode)
-    #     synth_image = (synth_image + 1) * (255 / 2)
-    #     synth_image = synth_image.permute(0, 2, 3,
-    #                                       1).clamp(0,
-    #                                                255).to(torch.uint8
-    #                                                        )[0].cpu().numpy()
-    #     video.append_data(synth_image)
-    # video.close()
+        img = G.synthesis(w.unsqueeze(0), noise_mode=noise_mode)
+        img = (img + 1) * (255 / 2)
+        img = img.permute(0, 2, 3,
+                          1).clamp(0, 255).to(torch.uint8)[0].cpu().numpy()
+        video.append_data(img)
 
 
 #----------------------------------------------------------------------------
