@@ -176,7 +176,7 @@ def project(
 @click.option('--name', 'output_name',    help='Name of the ouput file')
 @click.option('--num-steps',              help='Number of optimization steps', type=int, default=1000, show_default=True)
 @click.option('--seed',                   help='Random seed', type=int, default=303, show_default=True)
-@click.option('--save-video',             help='Save an mp4 video of optimization progress', type=bool, default=True, show_default=True)
+@click.option('--save-video',             help='Save an mp4 video of optimization progress', default=False, is_flag=True)
 @click.option('--outdir',                 help='Where to save the output images', required=True, metavar='DIR')
 @click.option('--fps',                    help='Frames per second of final video', default=30, show_default=True)
 # yapf: enable
@@ -238,6 +238,8 @@ def run_projection(
     vector_filename = f'{output_name}_projected_w' if output_name else 'projected_w'
 
     # Save final projected frame and W vector.
+    os.makedirs(outdir, exist_ok=True)
+
     target_pil.save(os.path.join(outdir, f'{target_filename}.png'))
     projected_w = projected_w_steps[-1]
     synth_image = G.synthesis(projected_w.unsqueeze(0), noise_mode='const')
@@ -253,7 +255,6 @@ def run_projection(
         )
 
     # Render debug output: optional video and projected image and W vector.
-    os.makedirs(outdir, exist_ok=True)
     if save_video:
         video_path = os.path.join(outdir, f'{filename}.mp4')
         video = imageio.get_writer(
