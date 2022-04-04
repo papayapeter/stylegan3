@@ -23,8 +23,15 @@ def run_alignment(predictor_dat, source, dest):
     if not len(matches := glob(os.path.join(source, '*.png'))):
         error(f'no .png images found in {source}')
 
+    # align faces and save files for the number of matches
     for path in matches:
-        align_face(path, predictor_dat).save(os.path.join(dest, os.path.basename(path)))
+        if (imgs := align_face(path, predictor_dat)) is not None:
+            if len(imgs) == 1:
+                imgs[0].save(os.path.join(dest, os.path.basename(path)))
+            else:
+                for index, img in enumerate(imgs):
+                    name, extension = os.path.splitext(os.path.basename(path))
+                    img.save(os.path.join(dest, f'{name}_{str(index).zfill(2)}{extension}'))
         
 
 if __name__ == "__main__":
