@@ -35,9 +35,7 @@ def run_alignment(predictor_dat, source, dest):
                 for index, img in enumerate(imgs):
                     name, extension = os.path.splitext(os.path.basename(path))
                     img.save(
-                        os.path.join(
-                            dest, f'{name}_{str(index).zfill(2)}{extension}'
-                            )
+                        os.path.join(dest, f'{name}_{index:02d}{extension}')
                         )
 
 
