@@ -1,8 +1,6 @@
 # interpolation and combining ws from Derrick Schultz
 # https://github.com/dvschultz/stylegan2-ada-pytorch
 #
-# to do:
-# - implement interpolation between seeds (with truncation) and seed parsing through click (can be taken from gen_images.py)
 """interpolate between two vectors in latent space and save the result as video"""
 
 import os
