@@ -138,6 +138,7 @@ def project(
 @click.option('--network', 'network_pkl', help='Network pickle filename', required=True)
 @click.option('--feature-ext', 'feature_extractor_pkl', help='Feature extractor model pickle filename', required=True)
 @click.option('--target', 'target_fname', help='Target image file to project to', required=True, metavar='FILE')
+@click.option('--name', 'output_name',    help='Name of the ouput file')
 @click.option('--num-steps',              help='Number of optimization steps', type=int, default=1000, show_default=True)
 @click.option('--seed',                   help='Random seed', type=int, default=303, show_default=True)
 @click.option('--save-video',             help='Save an mp4 video of optimization progress', type=bool, default=True, show_default=True)
@@ -147,6 +148,7 @@ def run_projection(
     network_pkl: str,
     feature_extractor_pkl: str,
     target_fname: str,
+    output_name: str,
     outdir: str,
     save_video: bool,
     seed: int,
@@ -190,10 +192,14 @@ def run_projection(
     )
     print (f'Elapsed: {(perf_counter()-start_time):.1f} s')
 
+    filename = output_name if output_name else "proj"
+    target_filename = f'{output_name}_target' if output_name else '_target'
+    vector_filename = f'{output_name}_projected_w' if output_name else 'projected_w'
+
     # Render debug output: optional video and projected image and W vector.
     os.makedirs(outdir, exist_ok=True)
     if save_video:
-        video_path = os.path.join(outdir, 'proj.mp4')
+        video_path = os.path.join(outdir, f'{filename}.mp4')
         video = imageio.get_writer(video_path, mode='I', fps=fps, codec='libx264', bitrate='16M')
         print (f'Saving optimization progress video "{video_path}"')
         for projected_w in tqdm(projected_w_steps, total=len(projected_w_steps)):
@@ -204,13 +210,13 @@ def run_projection(
         video.close()
 
     # Save final projected frame and W vector.
-    target_pil.save(f'{outdir}/target.png')
+    target_pil.save(os.path.join(outdir, f'{target_filename}.png'))
     projected_w = projected_w_steps[-1]
     synth_image = G.synthesis(projected_w.unsqueeze(0), noise_mode='const')
     synth_image = (synth_image + 1) * (255/2)
     synth_image = synth_image.permute(0, 2, 3, 1).clamp(0, 255).to(torch.uint8)[0].cpu().numpy()
-    PIL.Image.fromarray(synth_image, 'RGB').save(f'{outdir}/proj.png')
-    np.savez(f'{outdir}/projected_w.npz', w=projected_w.unsqueeze(0).cpu().numpy())
+    PIL.Image.fromarray(synth_image, 'RGB').save(os.path.join(outdir, f'{filename}.png'))
+    np.savez(os.path.join(outdir, f'{vector_filename}.npz'), w=projected_w.unsqueeze(0).cpu().numpy())
 
 #----------------------------------------------------------------------------
 

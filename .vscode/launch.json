@@ -46,7 +46,7 @@
             "args": [
                 "--predictor=models/shape_predictor_68_face_landmarks.dat",
                 "--source=in/unaligned/",
-                "--dest=in/",
+                "--dest=in/aligned/",
             ],
             "console": "integratedTerminal"
         },
