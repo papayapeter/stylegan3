@@ -13,28 +13,15 @@
             "justMyCode": true
         },
         {
-            "name": "stylegan3r - generate images",
+            "name": "generate images",
             "type": "python",
             "request": "launch",
             "program": "gen_images.py",
             "args": [
-                "--outdir=out",
+                "--outdir=out/",
                 "--trunc=1",
                 "--seeds=0",
                 "--network=models/stylegan3-r-ffhq-1024x1024.pkl"
-            ],
-            "console": "integratedTerminal"
-        },
-        {
-            "name": "stylegan2 - generate images",
-            "type": "python",
-            "request": "launch",
-            "program": "gen_images.py",
-            "args": [
-                "--outdir=out",
-                "--trunc=1",
-                "--seeds=0",
-                "--network=models/stylegan2-ffhq-1024x1024.pkl"
             ],
             "console": "integratedTerminal"
         },
@@ -62,13 +49,14 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "stylegan3 - project",
+            "name": "project",
             "type": "python",
             "request": "launch",
             "program": "projector.py",
             "args": [
-                "--target=in/dataset/00000/img00000002.png",
+                "--target=in/dataset/00000/img00000008.png",
                 "--outdir=out/",
+                "--name=nicki",
                 "--num-steps=1000",
                 "--save-video=True",
                 "--fps=30",
@@ -78,18 +66,19 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "stylegan2 - project",
+            "name": "interpolate",
             "type": "python",
             "request": "launch",
-            "program": "projector.py",
+            "program": "gen_interp_video.py",
             "args": [
-                "--target=in/dataset/00000/img00000002.png",
+                "--network=models/stylegan3-r-ffhq-1024x1024.pkl",
+                "--ws",
+                "out/zeno_projected_w.npz",
+                "out/nicki_projected_w.npz",
                 "--outdir=out/",
-                "--num-steps=1000",
-                "--save-video=True",
+                "--name=zeno-nicki",
+                "--length=4",
                 "--fps=30",
-                "--network=models/stylegan2-ffhq-1024x1024.pkl",
-                "--feature-ext=models/vgg16.pt"
             ],
             "console": "integratedTerminal"
         },

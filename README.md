@@ -1,17 +1,18 @@
 ## changes
+
 - added projector from [stylegan2](https://github.com/NVlabs/stylegan2-ada-pytorch) with adjustments
 - added face alignment tool from [Amir Saini's Repo](https://github.com/AmarSaini/Epoching_StyleGan2_Setup) with adjustments
 
 ### resources:
+
 - stylegan2 pretrained models: https://catalog.ngc.nvidia.com/orgs/nvidia/teams/research/models/stylegan2/files
 - stylegan3 pretrained models: https://catalog.ngc.nvidia.com/orgs/nvidia/teams/research/models/stylegan3/files
 - feature extraction model: https://nvlabs-fi-cdn.nvidia.com/stylegan2-ada-pytorch/pretrained/metrics/vgg16.pt
 - landmark detection model: http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2 (needs to be extracted)
 
-
 ### to do
 
-- [ ] adapt stylegan2 generation to stylegan3 so I can create an image from projected v
+- [x] adapt stylegan2 generation to stylegan3 so I can create an image from projected w
 - [ ] build own interpolation methods (circular/linear)
 - [ ] build animation interpolation framework to create smooth interpolations between latent vectors arranged like keyframes on a timeline
 
@@ -23,20 +24,22 @@
 Tero Karras, Miika Aittala, Samuli Laine, Erik H&auml;rk&ouml;nen, Janne Hellsten, Jaakko Lehtinen, Timo Aila<br>
 https://nvlabs.github.io/stylegan3<br>
 
-Abstract: *We observe that despite their hierarchical convolutional nature, the synthesis process of typical generative adversarial networks depends on absolute pixel coordinates in an unhealthy manner. This manifests itself as, e.g., detail appearing to be glued to image coordinates instead of the surfaces of depicted objects. We trace the root cause to careless signal processing that causes aliasing in the generator network. Interpreting all signals in the network as continuous, we derive generally applicable, small architectural changes that guarantee that unwanted information cannot leak into the hierarchical synthesis process. The resulting networks match the FID of StyleGAN2 but differ dramatically in their internal representations, and they are fully equivariant to translation and rotation even at subpixel scales. Our results pave the way for generative models better suited for video and animation.*
+Abstract: _We observe that despite their hierarchical convolutional nature, the synthesis process of typical generative adversarial networks depends on absolute pixel coordinates in an unhealthy manner. This manifests itself as, e.g., detail appearing to be glued to image coordinates instead of the surfaces of depicted objects. We trace the root cause to careless signal processing that causes aliasing in the generator network. Interpreting all signals in the network as continuous, we derive generally applicable, small architectural changes that guarantee that unwanted information cannot leak into the hierarchical synthesis process. The resulting networks match the FID of StyleGAN2 but differ dramatically in their internal representations, and they are fully equivariant to translation and rotation even at subpixel scales. Our results pave the way for generative models better suited for video and animation._
 
 For business inquiries, please visit our website and submit the form: [NVIDIA Research Licensing](https://www.nvidia.com/en-us/research/inquiries/)
 
 ## Release notes
 
 This repository is an updated version of [stylegan2-ada-pytorch](https://github.com/NVlabs/stylegan2-ada-pytorch), with several new features:
+
 - Alias-free generator architecture and training configurations (`stylegan3-t`, `stylegan3-r`).
 - Tools for interactive visualization (`visualizer.py`), spectral analysis (`avg_spectra.py`), and video generation (`gen_video.py`).
 - Equivariance metrics (`eqt50k_int`, `eqt50k_frac`, `eqr50k`).
 - General improvements: reduced memory usage, slightly faster training, bug fixes.
 
 Compatibility:
-- Compatible with old network pickles created using [stylegan2-ada](https://github.com/NVlabs/stylegan2-ada) and [stylegan2-ada-pytorch](https://github.com/NVlabs/stylegan2-ada-pytorch).  (Note: running old StyleGAN2 models on StyleGAN3 code will produce the same results as running them on stylegan2-ada/stylegan2-ada-pytorch.  To benefit from the StyleGAN3 architecture, you need to retrain.)
+
+- Compatible with old network pickles created using [stylegan2-ada](https://github.com/NVlabs/stylegan2-ada) and [stylegan2-ada-pytorch](https://github.com/NVlabs/stylegan2-ada-pytorch). (Note: running old StyleGAN2 models on StyleGAN3 code will produce the same results as running them on stylegan2-ada/stylegan2-ada-pytorch. To benefit from the StyleGAN3 architecture, you need to retrain.)
 - Supports old StyleGAN2 training configurations, including ADA and transfer learning. See [Training configurations](./docs/configs.md) for details.
 - Improved compatibility with Ampere GPUs and newer versions of PyTorch, CuDNN, etc.
 
@@ -49,34 +52,21 @@ While new generator approaches enable new media synthesis capabilities, they may
 - [Result videos](https://nvlabs-fi-cdn.nvidia.com/stylegan3/videos/)
 - [Curated example images](https://nvlabs-fi-cdn.nvidia.com/stylegan3/images/)
 - [StyleGAN3 pre-trained models](https://ngc.nvidia.com/catalog/models/nvidia:research:stylegan3) for config T (translation equiv.) and config R (translation and rotation equiv.)
-  > <sub>Access individual networks via `https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan3/versions/1/files/<MODEL>`, where `<MODEL>` is one of:</sub><br>
-  > <sub>`stylegan3-t-ffhq-1024x1024.pkl`, `stylegan3-t-ffhqu-1024x1024.pkl`, `stylegan3-t-ffhqu-256x256.pkl`</sub><br>
-  > <sub>`stylegan3-r-ffhq-1024x1024.pkl`, `stylegan3-r-ffhqu-1024x1024.pkl`, `stylegan3-r-ffhqu-256x256.pkl`</sub><br>
-  > <sub>`stylegan3-t-metfaces-1024x1024.pkl`, `stylegan3-t-metfacesu-1024x1024.pkl`</sub><br>
-  > <sub>`stylegan3-r-metfaces-1024x1024.pkl`, `stylegan3-r-metfacesu-1024x1024.pkl`</sub><br>
-  > <sub>`stylegan3-t-afhqv2-512x512.pkl`</sub><br>
-  > <sub>`stylegan3-r-afhqv2-512x512.pkl`</sub><br>
+  > <sub>Access individual networks via `https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan3/versions/1/files/<MODEL>`, where `<MODEL>` is one of:</sub><br> > <sub>`stylegan3-t-ffhq-1024x1024.pkl`, `stylegan3-t-ffhqu-1024x1024.pkl`, `stylegan3-t-ffhqu-256x256.pkl`</sub><br> > <sub>`stylegan3-r-ffhq-1024x1024.pkl`, `stylegan3-r-ffhqu-1024x1024.pkl`, `stylegan3-r-ffhqu-256x256.pkl`</sub><br> > <sub>`stylegan3-t-metfaces-1024x1024.pkl`, `stylegan3-t-metfacesu-1024x1024.pkl`</sub><br> > <sub>`stylegan3-r-metfaces-1024x1024.pkl`, `stylegan3-r-metfacesu-1024x1024.pkl`</sub><br> > <sub>`stylegan3-t-afhqv2-512x512.pkl`</sub><br> > <sub>`stylegan3-r-afhqv2-512x512.pkl`</sub><br>
 - [StyleGAN2 pre-trained models](https://ngc.nvidia.com/catalog/models/nvidia:research:stylegan2) compatible with this codebase
-  > <sub>Access individual networks via `https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan2/versions/1/files/<MODEL>`, where `<MODEL>` is one of:</sub><br>
-  > <sub>`stylegan2-ffhq-1024x1024.pkl`, `stylegan2-ffhq-512x512.pkl`, `stylegan2-ffhq-256x256.pkl`</sub><br>
-  > <sub>`stylegan2-ffhqu-1024x1024.pkl`, `stylegan2-ffhqu-256x256.pkl`</sub><br>
-  > <sub>`stylegan2-metfaces-1024x1024.pkl`, `stylegan2-metfacesu-1024x1024.pkl`</sub><br>
-  > <sub>`stylegan2-afhqv2-512x512.pkl`</sub><br>
-  > <sub>`stylegan2-afhqcat-512x512.pkl`, `stylegan2-afhqdog-512x512.pkl`, `stylegan2-afhqwild-512x512.pkl`</sub><br>
-  > <sub>`stylegan2-brecahad-512x512.pkl`, `stylegan2-cifar10-32x32.pkl`</sub><br>
-  > <sub>`stylegan2-celebahq-256x256.pkl`, `stylegan2-lsundog-256x256.pkl`</sub><br>
+  > <sub>Access individual networks via `https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan2/versions/1/files/<MODEL>`, where `<MODEL>` is one of:</sub><br> > <sub>`stylegan2-ffhq-1024x1024.pkl`, `stylegan2-ffhq-512x512.pkl`, `stylegan2-ffhq-256x256.pkl`</sub><br> > <sub>`stylegan2-ffhqu-1024x1024.pkl`, `stylegan2-ffhqu-256x256.pkl`</sub><br> > <sub>`stylegan2-metfaces-1024x1024.pkl`, `stylegan2-metfacesu-1024x1024.pkl`</sub><br> > <sub>`stylegan2-afhqv2-512x512.pkl`</sub><br> > <sub>`stylegan2-afhqcat-512x512.pkl`, `stylegan2-afhqdog-512x512.pkl`, `stylegan2-afhqwild-512x512.pkl`</sub><br> > <sub>`stylegan2-brecahad-512x512.pkl`, `stylegan2-cifar10-32x32.pkl`</sub><br> > <sub>`stylegan2-celebahq-256x256.pkl`, `stylegan2-lsundog-256x256.pkl`</sub><br>
 
 ## Requirements
 
-* Linux and Windows are supported, but we recommend Linux for performance and compatibility reasons.
-* 1&ndash;8 high-end NVIDIA GPUs with at least 12 GB of memory. We have done all testing and development using Tesla V100 and A100 GPUs.
-* 64-bit Python 3.8 and PyTorch 1.9.0 (or later). See https://pytorch.org for PyTorch install instructions.
-* CUDA toolkit 11.1 or later.  (Why is a separate CUDA toolkit installation required?  See [Troubleshooting](./docs/troubleshooting.md#why-is-cuda-toolkit-installation-necessary)).
-* GCC 7 or later (Linux) or Visual Studio (Windows) compilers.  Recommended GCC version depends on CUDA version, see for example [CUDA 11.4 system requirements](https://docs.nvidia.com/cuda/archive/11.4.1/cuda-installation-guide-linux/index.html#system-requirements).
-* Python libraries: see [environment.yml](./environment.yml) for exact library dependencies.  You can use the following commands with Miniconda3 to create and activate your StyleGAN3 Python environment:
+- Linux and Windows are supported, but we recommend Linux for performance and compatibility reasons.
+- 1&ndash;8 high-end NVIDIA GPUs with at least 12 GB of memory. We have done all testing and development using Tesla V100 and A100 GPUs.
+- 64-bit Python 3.8 and PyTorch 1.9.0 (or later). See https://pytorch.org for PyTorch install instructions.
+- CUDA toolkit 11.1 or later. (Why is a separate CUDA toolkit installation required? See [Troubleshooting](./docs/troubleshooting.md#why-is-cuda-toolkit-installation-necessary)).
+- GCC 7 or later (Linux) or Visual Studio (Windows) compilers. Recommended GCC version depends on CUDA version, see for example [CUDA 11.4 system requirements](https://docs.nvidia.com/cuda/archive/11.4.1/cuda-installation-guide-linux/index.html#system-requirements).
+- Python libraries: see [environment.yml](./environment.yml) for exact library dependencies. You can use the following commands with Miniconda3 to create and activate your StyleGAN3 Python environment:
   - `conda env create -f environment.yml`
   - `conda activate stylegan3`
-* Docker users:
+- Docker users:
   - Ensure you have correctly installed the [NVIDIA container runtime](https://docs.docker.com/config/containers/resource_constraints/#gpu).
   - Use the [provided Dockerfile](./Dockerfile) to build an image with the required library dependencies.
 
@@ -119,12 +109,12 @@ Note: The Docker image requires NVIDIA driver release `r470` or later.
 The `docker run` invocation may look daunting, so let's unpack its contents here:
 
 - `--gpus all -it --rm --user $(id -u):$(id -g)`: with all GPUs enabled, run an interactive session with current user's UID/GID to avoid Docker writing files as root.
-- ``-v `pwd`:/scratch --workdir /scratch``: mount current running dir (e.g., the top of this git repo on your host machine) to `/scratch` in the container and use that as the current working dir.
+- `` -v `pwd`:/scratch --workdir /scratch ``: mount current running dir (e.g., the top of this git repo on your host machine) to `/scratch` in the container and use that as the current working dir.
 - `-e HOME=/scratch`: let PyTorch and StyleGAN3 code know where to cache temporary files such as pre-trained models and custom PyTorch extension build results. Note: if you want more fine-grained control, you can instead set `TORCH_EXTENSIONS_DIR` (for custom extensions build dir) and `DNNLIB_CACHE_DIR` (for pre-trained model download cache). You want these cache dirs to reside on persistent volumes so that their contents are retained across multiple `docker run` invocations.
 
 ## Interactive visualization
 
-This release contains an interactive model visualization tool that can be used to explore various characteristics of a trained model.  To start it, run:
+This release contains an interactive model visualization tool that can be used to explore various characteristics of a trained model. To start it, run:
 
 ```.bash
 python visualizer.py
@@ -240,21 +230,24 @@ The first example looks up the training configuration and performs the same oper
 Note that the metrics can be quite expensive to compute (up to 1h), and many of them have an additional one-off cost for each new dataset (up to 30min). Also note that the evaluation is done using a different random seed each time, so the results will vary if the same metric is computed multiple times.
 
 Recommended metrics:
-* `fid50k_full`: Fr&eacute;chet inception distance<sup>[1]</sup> against the full dataset.
-* `kid50k_full`: Kernel inception distance<sup>[2]</sup> against the full dataset.
-* `pr50k3_full`: Precision and recall<sup>[3]</sup> againt the full dataset.
-* `ppl2_wend`: Perceptual path length<sup>[4]</sup> in W, endpoints, full image.
-* `eqt50k_int`: Equivariance<sup>[5]</sup> w.r.t. integer translation (EQ-T).
-* `eqt50k_frac`: Equivariance w.r.t. fractional translation (EQ-T<sub>frac</sub>).
-* `eqr50k`: Equivariance w.r.t. rotation (EQ-R).
+
+- `fid50k_full`: Fr&eacute;chet inception distance<sup>[1]</sup> against the full dataset.
+- `kid50k_full`: Kernel inception distance<sup>[2]</sup> against the full dataset.
+- `pr50k3_full`: Precision and recall<sup>[3]</sup> againt the full dataset.
+- `ppl2_wend`: Perceptual path length<sup>[4]</sup> in W, endpoints, full image.
+- `eqt50k_int`: Equivariance<sup>[5]</sup> w.r.t. integer translation (EQ-T).
+- `eqt50k_frac`: Equivariance w.r.t. fractional translation (EQ-T<sub>frac</sub>).
+- `eqr50k`: Equivariance w.r.t. rotation (EQ-R).
 
 Legacy metrics:
-* `fid50k`: Fr&eacute;chet inception distance against 50k real images.
-* `kid50k`: Kernel inception distance against 50k real images.
-* `pr50k3`: Precision and recall against 50k real images.
-* `is50k`: Inception score<sup>[6]</sup> for CIFAR-10.
+
+- `fid50k`: Fr&eacute;chet inception distance against 50k real images.
+- `kid50k`: Kernel inception distance against 50k real images.
+- `pr50k3`: Precision and recall against 50k real images.
+- `is50k`: Inception score<sup>[6]</sup> for CIFAR-10.
 
 References:
+
 1. [GANs Trained by a Two Time-Scale Update Rule Converge to a Local Nash Equilibrium](https://arxiv.org/abs/1706.08500), Heusel et al. 2017
 2. [Demystifying MMD GANs](https://arxiv.org/abs/1801.01401), Bi&nacute;kowski et al. 2018
 3. [Improved Precision and Recall Metric for Assessing Generative Models](https://arxiv.org/abs/1904.06991), Kynk&auml;&auml;nniemi et al. 2019

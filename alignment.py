@@ -7,10 +7,13 @@ from glob import glob
 from alignement.align_face import align_face
 from dataset_tool import error
 
+
+# yapf: disable
 @click.command()
 @click.option('--predictor', 'predictor_dat', help='Landmark detection model filename', required=True, metavar='PATH')
-@click.option('--source', help='Directory for input png images', required=True, metavar='PATH')
-@click.option('--dest', help='Output directory for aligned images', required=True, metavar='PATH')
+@click.option('--source',                     help='Directory for input png images', required=True, metavar='PATH')
+@click.option('--dest',                       help='Output directory for aligned images', required=True, metavar='PATH')
+# yapf: enable
 def run_alignment(predictor_dat, source, dest):
     # create output directory, if it does not exists
     os.makedirs(dest, exist_ok=True)
@@ -31,8 +34,12 @@ def run_alignment(predictor_dat, source, dest):
             else:
                 for index, img in enumerate(imgs):
                     name, extension = os.path.splitext(os.path.basename(path))
-                    img.save(os.path.join(dest, f'{name}_{str(index).zfill(2)}{extension}'))
-        
+                    img.save(
+                        os.path.join(
+                            dest, f'{name}_{str(index).zfill(2)}{extension}'
+                            )
+                        )
+
 
 if __name__ == "__main__":
-    run_alignment() # pylint: disable=no-value-for-parameter
+    run_alignment()  # pylint: disable=no-value-for-parameter
