@@ -21,6 +21,7 @@
                 "--outdir=out/",
                 "--trunc=1",
                 "--seeds=0",
+                // "--ws=out/zeno_projected_w.npz,out/resa2_projected_w.npz",
                 "--network=models/stylegan3-r-ffhq-1024x1024.pkl"
             ],
             "console": "integratedTerminal"
@@ -54,11 +55,11 @@
             "request": "launch",
             "program": "projector.py",
             "args": [
-                "--target=in/dataset/00000/img00000008.png",
+                "--target=in/dataset/00000/img00000011.png",
                 "--outdir=out/",
-                "--name=nicki",
+                "--name=resa-met",
                 "--num-steps=1000",
-                "--save-video=True",
+                "--save-video",
                 "--fps=30",
                 "--network=models/stylegan3-r-ffhq-1024x1024.pkl",
                 "--feature-ext=models/vgg16.pt"
@@ -72,11 +73,10 @@
             "program": "gen_interp_video.py",
             "args": [
                 "--network=models/stylegan3-r-ffhq-1024x1024.pkl",
-                "--ws",
-                "out/zeno_projected_w.npz",
-                "out/nicki_projected_w.npz",
+                "--ws=out/zeno_projected_w.npz,out/nicki_projected_w.npz,out/resa_projected_w.npz",
+                // "--seeds=1,2,3",
                 "--outdir=out/",
-                "--name=zeno-nicki",
+                "--name=test",
                 "--length=4",
                 "--fps=30",
             ],
