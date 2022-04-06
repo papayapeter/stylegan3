@@ -2,6 +2,7 @@
 
 - added projector from [stylegan2](https://github.com/NVlabs/stylegan2-ada-pytorch) with adjustments
 - added face alignment tool from [Amir Saini's Repo](https://github.com/AmarSaini/Epoching_StyleGan2_Setup) with adjustments
+- added changes to make resume more stable by derrick schultz's [stylegan3 fork](https://github.com/dvschultz/stylegan3)
 
 ### resources:
 
