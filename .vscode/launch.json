@@ -55,9 +55,9 @@
             "request": "launch",
             "program": "projector.py",
             "args": [
-                "--target=in/dataset/00000/img00000011.png",
+                "--target=in/dataset/00000/img00000000.png",
                 "--outdir=out/",
-                "--name=resa-met",
+                "--name=zeno-test",
                 "--num-steps=1000",
                 "--save-video",
                 "--fps=30",
@@ -79,6 +79,63 @@
                 "--name=test",
                 "--length=4",
                 "--fps=30",
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "create training dataset",
+            "type": "python",
+            "request": "launch",
+            "program": "dataset_tool.py",
+            "args": [
+                "--source=in/aligned/",
+                "--dest=in/datasets/small256.zip",
+                // "--resolution=256x256"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "transfer learn ffhqu-1024",
+            "type": "python",
+            "request": "launch",
+            "program": "train.py",
+            "args": [
+                "--outdir=training-runs/",
+                "--cfg=stylegan3-r",
+                "--gpus=1",
+                "--batch=32",
+                "--gamma=32",
+                "--batch-gpu=1",
+                "--mbstd-group=1",
+                "--snap=10",
+                "--mirror=1",
+                "--tick=1",
+                "--data=in/datasets/small.zip",
+                "--kimg=5000",
+                "--resume=models/stylegan3-r-ffhqu-1024x1024.pkl"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "transfer learn ffhqu-256",
+            "type": "python",
+            "request": "launch",
+            "program": "train.py",
+            "args": [
+                "--outdir=training-runs/",
+                "--cfg=stylegan3-r",
+                "--gpus=1",
+                "--batch=32",
+                "--gamma=2",
+                "--batch-gpu=8",
+                "--cbase=16384",
+                "--metrics=none",
+                "--snap=10",
+                "--mirror=1",
+                "--tick=1",
+                "--data=in/datasets/small256.zip",
+                "--kimg=5000",
+                "--resume=models/stylegan3-r-ffhqu-256x256.pkl"
             ],
             "console": "integratedTerminal"
         },
