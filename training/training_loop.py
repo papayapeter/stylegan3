@@ -5,11 +5,12 @@
 # and any modifications thereto.  Any use, reproduction, disclosure or
 # distribution of this software and related documentation without an express
 # license agreement from NVIDIA CORPORATION is strictly prohibited.
-
+# yapf: disable
 """Main training loop."""
 
 import os
 import time
+from datetime import datetime
 import copy
 import json
 import pickle
@@ -328,6 +329,7 @@ def training_loop(
         fields += [f"tick {training_stats.report0('Progress/tick', cur_tick):<5d}"]
         fields += [f"kimg {training_stats.report0('Progress/kimg', cur_nimg / 1e3):<8.1f}"]
         fields += [f"time {dnnlib.util.format_time(training_stats.report0('Timing/total_sec', tick_end_time - start_time)):<12s}"]
+        fields += [f"hour {datetime.now().strftime('%H:%M:%S')}"]
         fields += [f"sec/tick {training_stats.report0('Timing/sec_per_tick', tick_end_time - tick_start_time):<7.1f}"]
         fields += [f"sec/kimg {training_stats.report0('Timing/sec_per_kimg', (tick_end_time - tick_start_time) / (cur_nimg - tick_start_nimg) * 1e3):<7.2f}"]
         fields += [f"maintenance {training_stats.report0('Timing/maintenance_sec', maintenance_time):<6.1f}"]
