@@ -11,16 +11,12 @@ from dataset_tool import error
 # yapf: disable
 @click.command()
 @click.option('--predictor', 'predictor_dat', help='Landmark detection model filename', required=True, metavar='PATH')
-@click.option('--source',                     help='Directory for input png images', required=True, metavar='PATH')
-@click.option('--dest',                       help='Output directory for aligned images', required=True, metavar='PATH')
+@click.option('--source',                     type=click.Path(exists=True, file_okay=False), help='Directory for input png images', required=True, metavar='PATH')
+@click.option('--dest',                       type=click.Path(file_okay=False), help='Output directory for aligned images', required=True, metavar='PATH')
 # yapf: enable
 def run_alignment(predictor_dat, source, dest):
     # create output directory, if it does not exists
     os.makedirs(dest, exist_ok=True)
-
-    # check source directory
-    if not os.path.isdir(source):
-        error('source is not a directory')
 
     # find all images in source directory
     if not len(matches := glob(os.path.join(source, '*.png'))):

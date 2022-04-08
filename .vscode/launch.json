@@ -27,10 +27,22 @@
             "console": "integratedTerminal"
         },
         {
+            "name": "differentiate",
+            "type": "python",
+            "request": "launch",
+            "program": "differentiate.py",
+            "args": [
+                "--source=in/aligned/",
+                "--dest=in/sorted/",
+                "--min-deviation=5.0"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
             "name": "align",
             "type": "python",
             "request": "launch",
-            "program": "alignment.py",
+            "program": "align.py",
             "args": [
                 "--predictor=models/shape_predictor_68_face_landmarks.dat",
                 "--source=in/unaligned/",
