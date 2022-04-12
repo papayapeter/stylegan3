@@ -57,7 +57,7 @@
             "program": "dataset_tool.py",
             "args": [
                 "--source=in/aligned/",
-                "--dest=in/dataset/",
+                "--dest=in/datasets/uncompressed/",
             ],
             "console": "integratedTerminal"
         },
@@ -67,9 +67,9 @@
             "request": "launch",
             "program": "projector.py",
             "args": [
-                "--target=in/dataset/00000/img00000000.png",
+                "--target=in/datasets/uncompressed/img00000001.png",
                 "--outdir=out/",
-                "--name=zeno-test",
+                "--name=zeno",
                 "--num-steps=1000",
                 "--save-video",
                 "--fps=30",
@@ -85,11 +85,11 @@
             "program": "gen_interp_video.py",
             "args": [
                 "--network=models/stylegan3-r-ffhq-1024x1024.pkl",
-                "--ws=out/zeno_projected_w.npz,out/nicki_projected_w.npz,out/resa_projected_w.npz",
+                "--ws=out/lola_projected_w.npz,out/zeno_projected_w.npz",
                 // "--seeds=1,2,3",
                 "--outdir=out/",
-                "--name=test",
-                "--length=4",
+                "--name=lola-zeno",
+                "--length=8",
                 "--fps=30",
             ],
             "console": "integratedTerminal"

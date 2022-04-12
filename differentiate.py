@@ -41,7 +41,7 @@ def differentiate(source: str, dest: str, min_avg_deviation: float):
         for path in immuted_paths:
             comparision = np.array(Image.open(path).convert('L'))
             difference = base.astype(np.int16) - comparision.astype(np.int16)
-            abs_difference = abs(difference).astype(np.uint8)
+            abs_difference = abs(difference)
             avg_difference = np.sum(abs_difference) / (w * h)
 
             if avg_difference < min_avg_deviation:

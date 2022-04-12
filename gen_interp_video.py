@@ -151,7 +151,7 @@ def generate_interpolation(
         raise click.ClickException('Either "--ws" or "--seeds" must be set!')
 
     # get interpolated points
-    points = line_interpolate(ws, fps * length, 'easeInOutQuad')
+    points = line_interpolate(ws, fps * length, 'linear')
 
     # generate video
     video = imageio.get_writer(
