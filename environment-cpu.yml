@@ -1,4 +1,4 @@
-name: stylegan3
+name: stylegan3-cpu
 channels:
   - pytorch
   - nvidia
@@ -11,7 +11,7 @@ dependencies:
   - pillow=8.3.1
   - scipy=1.7.1
   - pytorch=1.9.1
-  - cudatoolkit=11.1
+  - cpuonly=2.0
   - requests=2.26.0
   - tqdm=4.62.2
   - ninja=1.10.2

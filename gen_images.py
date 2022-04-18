@@ -12,6 +12,7 @@ import re
 from typing import List, Optional, Tuple, Union
 
 import click
+import time
 import dnnlib
 import numpy as np
 import PIL.Image
@@ -131,12 +132,24 @@ def generate_images(
         --network=https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan3/versions/1/files/stylegan3-t-metfacesu-1024x1024.pkl
     """
 
+    # checking for cuda
+    cuda_avail = torch.cuda.is_available()
+    if cuda_avail:
+        print('cuda is available.')
+        device = torch.device('cuda')
+    else:
+        print('cuda is not available.')
+        device = torch.device('cpu')
+    print(f'device: "{device}"')
+
     print(f'Loading networks from "{network_pkl}"...')
-    device = torch.device('cuda')
     with dnnlib.util.open_url(network_pkl) as f:
         G = legacy.load_network_pkl(f)['G_ema'].to(device)  # type: ignore
 
     os.makedirs(outdir, exist_ok=True)
+
+    # measure time
+    start = time.time()
 
     # Generate from projected w(s).
     if projected_ws is not None:
@@ -195,6 +208,8 @@ def generate_images(
             PIL.Image.fromarray(img[0].cpu().numpy(), 'RGB').save(
                 os.path.join(outdir, f'seed{seed:04d}.png')
                 )
+
+        print(f'--- generation took {time.time() - start}s')
     else:
         raise click.ClickException('Either "--ws" or "--seeds" must be set!')
 

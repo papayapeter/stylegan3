@@ -20,9 +20,10 @@
             "args": [
                 "--outdir=out/",
                 "--trunc=1",
-                "--seeds=0",
+                "--seeds=100",
                 // "--ws=out/zeno_projected_w.npz,out/resa2_projected_w.npz",
-                "--network=models/stylegan3-r-ffhq-1024x1024.pkl"
+                // "--network=models/stylegan3-r-ffhq-1024x1024.pkl"
+                "--network=https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan3/versions/1/files/stylegan3-t-ffhqu-1024x1024.pkl"
             ],
             "console": "integratedTerminal"
         },

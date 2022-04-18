@@ -165,8 +165,17 @@ def generate_images(
     output video length will be '# seeds/(w*h)*w_frames' frames.
     """
 
+    # checking for cuda
+    cuda_avail = torch.cuda.is_available()
+    if cuda_avail:
+        print('cuda is available.')
+        device = torch.device('cuda')
+    else:
+        print('cuda is not available.')
+        device = torch.device('cpu')
+    print(f'device: "{device}"')
+    
     print('Loading networks from "%s"...' % network_pkl)
-    device = torch.device('cuda')
     with dnnlib.util.open_url(network_pkl) as f:
         G = legacy.load_network_pkl(f)['G_ema'].to(device) # type: ignore
 
