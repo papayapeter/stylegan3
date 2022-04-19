@@ -3,6 +3,7 @@
 import os
 import click
 import shutil
+import tqdm
 import numpy as np
 from glob import glob
 from PIL import Image, ImageChops
@@ -38,7 +39,8 @@ def differentiate(source: str, dest: str, min_avg_deviation: float):
 
         # comparing image
         immuted_paths = image_paths.copy()
-        for path in immuted_paths:
+        discarded = 0
+        for path in tqdm.tqdm(immuted_paths, total=len(immuted_paths)):
             comparision = np.array(Image.open(path).convert('L'))
             difference = base.astype(np.int16) - comparision.astype(np.int16)
             abs_difference = abs(difference)
@@ -46,6 +48,9 @@ def differentiate(source: str, dest: str, min_avg_deviation: float):
 
             if avg_difference < min_avg_deviation:
                 image_paths.remove(path)
+                discarded += 1
+
+        print(f'discarded {discarded} images')
 
 
 if __name__ == '__main__':
