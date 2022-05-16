@@ -101,8 +101,8 @@
             "request": "launch",
             "program": "dataset_tool.py",
             "args": [
-                "--source=in/aligned/lola_zeno0/",
-                "--dest=in/datasets/lola_zeno0_1024.zip",
+                "--source=in/aligned/lola_zeno_01/",
+                "--dest=in/datasets/lola_zeno_01_1024.zip",
                 // "--resolution=256x256"
             ],
             "console": "integratedTerminal"
