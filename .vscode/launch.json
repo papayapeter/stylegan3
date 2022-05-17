@@ -33,9 +33,10 @@
             "request": "launch",
             "program": "differentiate.py",
             "args": [
-                "--source=in/unaligned/zeno/",
-                "--dest=in/sorted/zeno/",
-                "--min-deviation=5.0"
+                "--source=in/unaligned/lola/",
+                "--dest=in/sorted/lola_4.0/",
+                "--min-deviation=4.0",
+                "--batchsize=2500"
             ],
             "console": "integratedTerminal"
         },
@@ -46,8 +47,8 @@
             "program": "align.py",
             "args": [
                 "--predictor=models/shape_predictor_68_face_landmarks.dat",
-                "--source=in/sorted/zeno/",
-                "--dest=in/aligned/zeno/",
+                "--source=in/sorted/lola_5.0/",
+                "--dest=in/aligned/lola_5.0/",
             ],
             "console": "integratedTerminal"
         },
