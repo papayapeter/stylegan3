@@ -2,7 +2,7 @@ name: stylegan3-cpu
 channels:
   - pytorch
 dependencies:
-  - python=3.8
+  - python=3.9
   - pip
   - yapf>=0.30
   - numpy==1.21.2
