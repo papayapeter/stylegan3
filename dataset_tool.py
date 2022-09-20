@@ -6,6 +6,8 @@
 # distribution of this software and related documentation without an express
 # license agreement from NVIDIA CORPORATION is strictly prohibited.
 
+# yapf: disable
+
 """Tool for creating ZIP/PNG based datasets."""
 
 import functools
@@ -66,7 +68,8 @@ def is_image_ext(fname: Union[str, Path]) -> bool:
 
 #----------------------------------------------------------------------------
 
-def open_image_folder(source_dir, *, max_images: Optional[int]):
+
+def open_image_folder(source_dir, *, max_images: Optional[int], drop_alpha: bool):
     input_images = [str(f) for f in sorted(Path(source_dir).rglob('*')) if is_image_ext(f) and os.path.isfile(f)]
 
     # Load labels.
@@ -86,7 +89,11 @@ def open_image_folder(source_dir, *, max_images: Optional[int]):
         for idx, fname in enumerate(input_images):
             arch_fname = os.path.relpath(fname, source_dir)
             arch_fname = arch_fname.replace('\\', '/')
-            img = np.array(PIL.Image.open(fname))
+            pil_img = PIL.Image.open(fname)
+            # check for alpha channel and drop it if drop_appha is set
+            if drop_alpha and pil_img.mode == 'RGBA':
+                pil_img = pil_img.convert('RGB')
+            img = np.array(pil_img)
             yield dict(img=img, label=labels.get(arch_fname))
             if idx >= max_idx-1:
                 break
@@ -264,12 +271,12 @@ def make_transform(
 
 #----------------------------------------------------------------------------
 
-def open_dataset(source, *, max_images: Optional[int]):
+def open_dataset(source, *, max_images: Optional[int], drop_alpha: bool):
     if os.path.isdir(source):
         if source.rstrip('/').endswith('_lmdb'):
             return open_lmdb(source, max_images=max_images)
         else:
-            return open_image_folder(source, max_images=max_images)
+            return open_image_folder(source, max_images=max_images, drop_alpha=drop_alpha)
     elif os.path.isfile(source):
         if os.path.basename(source) == 'cifar-10-python.tar.gz':
             return open_cifar10(source, max_images=max_images)
@@ -323,14 +330,16 @@ def open_dest(dest: str) -> Tuple[str, Callable[[str, Union[bytes, str]], None],
 @click.option('--max-images', help='Output only up to `max-images` images', type=int, default=None)
 @click.option('--transform', help='Input crop/resize mode', type=click.Choice(['center-crop', 'center-crop-wide']))
 @click.option('--resolution', help='Output resolution (e.g., \'512x512\')', metavar='WxH', type=parse_tuple)
+@click.option('--drop_alpha', help='if the images have four channels, drop the 4th', is_flag=True, default=False)
 def convert_dataset(
-    ctx: click.Context,
-    source: str,
-    dest: str,
-    max_images: Optional[int],
-    transform: Optional[str],
-    resolution: Optional[Tuple[int, int]]
-):
+        ctx: click.Context,
+        source: str,
+        dest: str,
+        max_images: Optional[int],
+        transform: Optional[str],
+        resolution: Optional[Tuple[int, int]],
+        drop_alpha: bool
+    ):
     """Convert an image dataset into a dataset archive usable with StyleGAN2 ADA PyTorch.
 
     The input dataset format is guessed from the --source argument:
@@ -395,7 +404,7 @@ def convert_dataset(
     if dest == '':
         ctx.fail('--dest output filename or directory must not be an empty string')
 
-    num_files, input_iter = open_dataset(source, max_images=max_images)
+    num_files, input_iter = open_dataset(source, max_images=max_images, drop_alpha=drop_alpha)
     archive_root_dir, save_bytes, close_dest = open_dest(dest)
 
     if resolution is None: resolution = (None, None)
