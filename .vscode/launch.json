@@ -114,7 +114,7 @@
             "request": "launch",
             "program": "train.py",
             "args": [
-                "--outdir=training-runs/",
+                "--outdir=training-runs-test/",
                 "--cfg=stylegan3-t",
                 "--gpus=1",
                 "--batch=32",
@@ -125,7 +125,7 @@
                 "--snap=10",
                 // "--mirror=1",
                 "--tick=1",
-                "--data=in/datasets/lola_zeno0_1024.zip",
+                "--data=in/datasets/lola_zeno1_1024.zip",
                 "--kimg=105",
                 "--resume=models/stylegan3-t-ffhq-1024x1024.pkl"
             ],
