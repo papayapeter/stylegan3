@@ -6,10 +6,9 @@ dependencies:
   - python=3.9
   - pip
   - yapf>=0.30
-  - yapf>=0.30
   - click=8.0
-  - pillow=8.3.1
   - numpy=1.22
+  - pillow=8.3.1
   - scipy=1.7.1
   - ninja=1.10.2
   - requests=2.26.0
