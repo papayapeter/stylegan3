@@ -28,7 +28,7 @@ def project(
         target: torch.
     Tensor,  # [C,H,W] and dynamic range [0,255], W & H must match G output resolution
         *,
-        feature_extractor_pkl,
+        feature_extractor_model,
         num_steps=1000,
         w_avg_samples=10000,
         initial_learning_rate=0.1,
@@ -70,18 +70,13 @@ def project(
         for (name, buf) in G.synthesis.named_buffers() if 'noise_const' in name
         }
 
-    # Load VGG16 feature detector.
-    print(f'Loading feature detection model from "{feature_extractor_pkl}"...')
-    with dnnlib.util.open_url(feature_extractor_pkl) as f:
-        vgg16 = torch.jit.load(f).eval().to(device)
-
     # Features for target image.
     target_images = target.unsqueeze(0).to(device).to(torch.float32)
     if target_images.shape[2] > 256:
         target_images = F.interpolate(
             target_images, size=(256, 256), mode='area'
             )
-    target_features = vgg16(
+    target_features = feature_extractor_model(
         target_images, resize_images=False, return_lpips=True
         )
 
@@ -126,7 +121,7 @@ def project(
                 )
 
         # Features for synth images.
-        synth_features = vgg16(
+        synth_features = feature_extractor_model(
             synth_images, resize_images=False, return_lpips=True
             )
         dist = (target_features - synth_features).square().sum()
@@ -221,12 +216,17 @@ def run_projection(
                                    PIL.Image.LANCZOS)
     target_uint8 = np.array(target_pil, dtype=np.uint8)
 
+    # Load VGG16 feature detector.
+    print(f'Loading feature detection model from "{feature_extractor_pkl}"...')
+    with dnnlib.util.open_url(feature_extractor_pkl) as f:
+        vgg16 = torch.jit.load(f).eval().to(device)
+
     # Optimize projection.
     start_time = perf_counter()
     projected_w_steps = project(
         G,
         target=torch.tensor(target_uint8.transpose([2, 0, 1]), device=device),  # pylint: disable=not-callable
-        feature_extractor_pkl=feature_extractor_pkl,
+        feature_extractor_model=vgg16,
         num_steps=num_steps,
         device=device,
         verbose=True

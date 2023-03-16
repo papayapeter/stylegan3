@@ -81,6 +81,21 @@
             "console": "integratedTerminal"
         },
         {
+            "name": "project batchwise",
+            "type": "python",
+            "request": "launch",
+            "program": "batch_projector.py",
+            "args": [
+                "--target_dir=in/datasets/uncompressed",
+                "--outdir=out/test",
+                "--name=test",
+                "--num-steps=200",
+                "--network=models/stylegan3-t-ffhq-1024x1024.pkl",
+                "--feature-ext=models/vgg16.pt"
+            ],
+            "console": "integratedTerminal"
+        },
+        {
             "name": "interpolate",
             "type": "python",
             "request": "launch",
