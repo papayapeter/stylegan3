@@ -1,6 +1,6 @@
 import os
 from tqdm import tqdm
-from time import perf_counter
+# from time import perf_counter
 from glob import glob
 
 import click
@@ -56,7 +56,7 @@ def run_projection(
     # os.makedirs(outdir, exist_ok=True)
     os.makedirs(os.path.join(outdir, 'npz'), exist_ok=True)
 
-    target_fnames = glob(os.path.join(target_dirname, '*.png'))
+    target_fnames = sorted(glob(os.path.join(target_dirname, '*.png')))
     for index, target_fname in enumerate(tqdm(target_fnames)):
 
         # Load target image.
@@ -71,7 +71,7 @@ def run_projection(
         target_uint8 = np.array(target_pil, dtype=np.uint8)
 
         # Optimize projection.
-        start_time = perf_counter()
+        # start_time = perf_counter()
         projected_w_steps = project(
             G,
             target=torch.tensor(

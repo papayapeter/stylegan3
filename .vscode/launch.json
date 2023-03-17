@@ -47,8 +47,8 @@
             "program": "align.py",
             "args": [
                 "--predictor=models/shape_predictor_68_face_landmarks.dat",
-                "--source=in/sorted/lola_5.0/",
-                "--dest=in/aligned/lola_5.0/",
+                "--source=in/unaligned/not-my-image",
+                "--dest=in/aligned/not-my-image",
             ],
             "console": "integratedTerminal"
         },
@@ -58,8 +58,8 @@
             "request": "launch",
             "program": "dataset_tool.py",
             "args": [
-                "--source=in/aligned/",
-                "--dest=in/datasets/uncompressed/",
+                "--source=in/aligned/not-my-image",
+                "--dest=in/datasets/uncompressed/not-my-image",
             ],
             "console": "integratedTerminal"
         },
@@ -69,13 +69,13 @@
             "request": "launch",
             "program": "projector.py",
             "args": [
-                "--target=in/datasets/uncompressed/img00000001.png",
+                "--target=in/datasets/uncompressed/not-my-image/img00000000.png",
                 "--outdir=out/",
                 "--name=zeno",
                 "--num-steps=1000",
                 "--save-video",
                 "--fps=30",
-                "--network=models/stylegan3-r-ffhq-1024x1024.pkl",
+                "--network=models/stylegan3-t-ffhq-1024x1024.pkl",
                 "--feature-ext=models/vgg16.pt"
             ],
             "console": "integratedTerminal"
@@ -86,11 +86,12 @@
             "request": "launch",
             "program": "batch_projector.py",
             "args": [
-                "--target_dir=in/datasets/uncompressed",
-                "--outdir=out/test",
+                "--target_dir=in/datasets/uncompressed/not-my-image",
+                "--outdir=out/not-my-image",
                 "--name=test",
-                "--num-steps=200",
+                "--num-steps=800",
                 "--network=models/stylegan3-t-ffhq-1024x1024.pkl",
+                // "--network=models/stylegan2-ffhq-config-f.pkl",
                 "--feature-ext=models/vgg16.pt"
             ],
             "console": "integratedTerminal"
