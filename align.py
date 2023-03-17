@@ -19,7 +19,7 @@ def run_alignment(predictor_dat, source, dest):
     os.makedirs(dest, exist_ok=True)
 
     # find all images in source directory
-    if not len(matches := glob(os.path.join(source, '*.png'))):
+    if not len(matches := sorted(glob(os.path.join(source, '*.png')))):
         error(f'no .png images found in {source}')
 
     # align faces and save files for the number of matches
