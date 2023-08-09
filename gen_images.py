@@ -7,9 +7,10 @@
 # license agreement from NVIDIA CORPORATION is strictly prohibited.
 """Generate images using pretrained network pickle."""
 
+from typing import List, Optional, Tuple, Union
 import os
 import re
-from typing import List, Optional, Tuple, Union
+import glob
 
 import click
 import time
@@ -53,8 +54,12 @@ def parse_paths(s: Union[str, List]) -> List[int]:
     if isinstance(s, list):
         return s
     filenames = []
-    for p in s.split(','):
-        filenames.append(p)
+    if os.path.isdir(s):
+        filenames = glob.glob(os.path.join(s, '*.npz'))
+        filenames.sort()
+    else:
+        for p in s.split(','):
+            filenames.append(p)
     return filenames
 
 
@@ -97,7 +102,7 @@ def make_transform(translate: Tuple[float, float], angle: float):
 # yapf: disable
 @click.command()
 @click.option('--network', 'network_pkl',  help='Network pickle filename', required=True)
-@click.option('--ws', 'projected_ws',      type=parse_paths, help='One or more projected_w filenames to generate from')
+@click.option('--ws', 'projected_ws',      type=parse_paths, help='One or more projected_w filenames to generate from, or a directory containing .npz files')
 @click.option('--seeds',                   type=parse_range, help='List of random seeds (e.g., \'0,1,4-6\')')
 @click.option('--trunc', 'truncation_psi', type=float, help='Truncation psi', default=1, show_default=True)
 @click.option('--class', 'class_idx',      type=int, help='Class label (unconditional if not specified)')
