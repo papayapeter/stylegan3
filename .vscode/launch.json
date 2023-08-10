@@ -18,11 +18,11 @@
             "request": "launch",
             "program": "gen_images.py",
             "args": [
-                "--outdir=out/",
-                "--trunc=1",
+                "--outdir=test/",
+                // "--trunc=1",
                 // "--seeds=100",
-                "--ws=out/zeno_stylegan2_age.npz",
-                "--network=models/stylegan2-ffhq-config-f.pkl"
+                "--ws=out/not-my-image/01/npz",
+                "--network=models/stylegan3-t-ffhq-1024x1024.pkl"
                 // "--network=https://api.ngc.nvidia.com/v2/models/nvidia/research/stylegan3/versions/1/files/stylegan3-t-ffhqu-1024x1024.pkl"
             ],
             "console": "integratedTerminal"
