@@ -26,7 +26,7 @@ def run_alignment(predictor_dat, source, dest):
             if is_image_ext(f) and os.path.isfile(f)
             ]
         ):
-        error(f'no .png images found in {source}')
+        error(f'no compatible images found in {source}')
 
     # align faces and save files for the number of matches
     for path in matches:
