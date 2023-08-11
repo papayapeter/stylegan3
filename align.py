@@ -3,15 +3,16 @@
 import os
 import click
 from glob import glob
+from pathlib import Path
 
 from alignement.align_face import align_face
-from dataset_tool import error
+from dataset_tool import error, is_image_ext
 
 
 # yapf: disable
 @click.command()
 @click.option('--predictor', 'predictor_dat', help='Landmark detection model filename', required=True, metavar='PATH')
-@click.option('--source',                     type=click.Path(exists=True, file_okay=False), help='Directory for input png images', required=True, metavar='PATH')
+@click.option('--source',                     type=click.Path(exists=True, file_okay=False), help='Directory for input images', required=True, metavar='PATH')
 @click.option('--dest',                       type=click.Path(file_okay=False), help='Output directory for aligned images', required=True, metavar='PATH')
 # yapf: enable
 def run_alignment(predictor_dat, source, dest):
@@ -19,7 +20,12 @@ def run_alignment(predictor_dat, source, dest):
     os.makedirs(dest, exist_ok=True)
 
     # find all images in source directory
-    if not len(matches := sorted(glob(os.path.join(source, '*.png')))):
+    if not len(
+        matches := [
+            str(f) for f in sorted(Path(source).rglob('*'))
+            if is_image_ext(f) and os.path.isfile(f)
+            ]
+        ):
         error(f'no .png images found in {source}')
 
     # align faces and save files for the number of matches
