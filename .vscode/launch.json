@@ -114,19 +114,6 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "translate",
-            "type": "python",
-            "request": "launch",
-            "program": "translate_w.py",
-            "args": [
-                "--start_w=out/zeno_stylegan3_projected_w.npz",
-                "--translation_w=models/stylegan2directions/gender.npy",
-                "--factor=-3",
-                "--outfile=out/zeno_stylegan3_gender.npz"
-            ],
-            "console": "integratedTerminal"
-        },
-        {
             "name": "create training dataset",
             "type": "python",
             "request": "launch",
