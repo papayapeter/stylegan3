@@ -47,8 +47,8 @@
             "program": "align.py",
             "args": [
                 "--predictor=models/shape_predictor_68_face_landmarks.dat",
-                "--source=in/unaligned/not-my-image",
-                "--dest=in/aligned/not-my-image",
+                "--source=in/unaligned/mirror",
+                "--dest=in/aligned/mirror",
             ],
             "console": "integratedTerminal"
         },
@@ -58,8 +58,9 @@
             "request": "launch",
             "program": "dataset_tool.py",
             "args": [
-                "--source=in/aligned/not-my-image",
-                "--dest=in/datasets/uncompressed/not-my-image",
+                "--source=in/unaligned/whose_image_test_4k",
+                "--dest=in/datasets/uncompressed/whose_image_test",
+                "--resolution=1024x1024"
             ],
             "console": "integratedTerminal"
         },

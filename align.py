@@ -2,11 +2,11 @@
 
 import os
 import click
-from glob import glob
 from pathlib import Path
+import PIL.Image
 
 from alignement.align_face import align_face
-from dataset_tool import error, is_image_ext
+from dataset_tool import error, file_ext, is_image_ext
 
 
 # yapf: disable
@@ -16,6 +16,8 @@ from dataset_tool import error, is_image_ext
 @click.option('--dest',                       type=click.Path(file_okay=False), help='Output directory for aligned images', required=True, metavar='PATH')
 # yapf: enable
 def run_alignment(predictor_dat, source, dest):
+    PIL.Image.init()
+
     # create output directory, if it does not exists
     os.makedirs(dest, exist_ok=True)
 
@@ -32,13 +34,19 @@ def run_alignment(predictor_dat, source, dest):
     for path in matches:
         if (imgs := align_face(path, predictor_dat)) is not None:
             if len(imgs) == 1:
-                imgs[0].save(os.path.join(dest, os.path.basename(path)))
+                imgs[0].save(
+                    os.path.join(
+                        dest,
+                        os.path.basename(path).replace(
+                            file_ext(os.path.basename(path)), 'png'
+                            )
+                        )
+                    )
+
             else:
                 for index, img in enumerate(imgs):
                     name, extension = os.path.splitext(os.path.basename(path))
-                    img.save(
-                        os.path.join(dest, f'{name}_{index:02d}{extension}')
-                        )
+                    img.save(os.path.join(dest, f'{name}_{index:02d}.png'))
 
 
 if __name__ == "__main__":
